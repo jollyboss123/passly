@@ -2,15 +2,15 @@ package pbkdf2
 
 import (
 	"crypto/hmac"
-	"crypto/sha512"
+	"hash"
 )
 
 // Key derives a key from the password, salt and iteration count, returning a
 // []byte of length keylen that can be used as cryptographic key. The key is
 // derived based on the method described as PBKDF2 with the HMAC variant using
 // the supplied hash function.
-func Key(password, salt []byte, iter, keyLen int) []byte {
-	prf := hmac.New(sha512.New, password)
+func Key(password, salt []byte, iter, keyLen int, h func() hash.Hash) []byte {
+	prf := hmac.New(h, password)
 	hashLen := prf.Size()
 	numBlocks := (keyLen + hashLen - 1) / hashLen
 
