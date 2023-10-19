@@ -18,24 +18,23 @@ func main() {
 	masterPass := []byte("password")
 	log.Println("pw: ", string(masterPass))
 
-	ciphertext, err := encrypter(masterPass)
+	// generate secret key
+	sk, err := genSecretKey(31)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("secret: ", string(sk))
+
+	ciphertext, _, err := encrypter(masterPass, sk) // save ciphertext and iv for decryption
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("ciphertext: %x\n", ciphertext)
-
 }
 
-func encrypter(password []byte) ([]byte, error) {
-	// generate secret key
-	sk, err := genSecretKey(31)
-	if err != nil {
-		return nil, err
-	}
-	log.Println("secret: ", string(sk))
-
-	// generate pbkdf2 key
-	key := pbkdf2.Key(password, sk, 100_000, 256/8, sha512.New)
+func encrypter(password, secretKey []byte) (ciphertext []byte, iv []byte, err error) {
+	// generate pbkdf2 key from password and secret key
+	key := pbkdf2.Key(password, secretKey, 100_000, 256/8, sha512.New)
 	result := ""
 	for _, k := range key {
 		result += fmt.Sprintf("%02X", k)
@@ -45,17 +44,17 @@ func encrypter(password []byte) ([]byte, error) {
 	// pad password to aes block size
 	password, err = pkcs7.Pad(password, aes.BlockSize)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	log.Println("padded: ", string(password))
 
 	// make cipher text
-	ciphertext := make([]byte, aes.BlockSize+len(password))
+	ciphertext = make([]byte, aes.BlockSize+len(password))
 
 	// make iv and prepend to the cipher text
-	iv := ciphertext[:aes.BlockSize]
+	iv = ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	resIV := ""
 	for _, i := range iv {
@@ -63,16 +62,20 @@ func encrypter(password []byte) ([]byte, error) {
 	}
 	log.Println("iv: ", resIV)
 
-	// make new aes cipher
+	// make new aes cipher from password, key and iv
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// encrypt with cbc
 	mode := cipher.NewCBCEncrypter(block, iv)
 	mode.CryptBlocks(ciphertext[aes.BlockSize:], password)
-	return ciphertext, nil
+	return ciphertext, iv, nil
+}
+
+func decrypter(ciphertext, secretKey, iv []byte) ([]byte, error) {
+	return nil, nil
 }
 
 // genSecretKey generates secret key to be store at client side
