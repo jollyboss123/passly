@@ -3,4 +3,4 @@ go_mobile:
 	gomobile init
 
 android_client:
-	gomobile bind -v -target=android -o ./android/passlysdk.aar ./pkg/passly
+	gomobile bind -v -target=android -o ./android/passlysdk.aar ./pkg/2ksd
