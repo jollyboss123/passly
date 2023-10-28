@@ -1,5 +1,5 @@
 # passly
-A password manager.
+A password manager sdk.
 Do note that this project is for educational and research purposes and is not production-ready.
 
 ## Reference Documentation
