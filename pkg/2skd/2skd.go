@@ -1,4 +1,4 @@
-package passly
+package _2skd
 
 import (
 	"crypto/aes"
@@ -15,6 +15,7 @@ import (
 )
 
 func Encrypter(password, plain, secretKey []byte) (ciphertext []byte, err error) {
+	log.Printf("master: %x\n", password)
 	// generate pbkdf2 key from password and secret key
 	key := pbkdf2.Key(password, secretKey, 650_000, 256/8, sha512.New)
 	result := ""
@@ -57,6 +58,7 @@ func Encrypter(password, plain, secretKey []byte) (ciphertext []byte, err error)
 }
 
 func Decrypter(password, ciphertext, secretKey []byte) ([]byte, error) {
+	log.Printf("master: %x\n", password)
 	key := pbkdf2.Key(password, secretKey, 650_000, 256/8, sha512.New)
 	result := ""
 	for _, k := range key {

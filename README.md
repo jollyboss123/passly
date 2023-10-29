@@ -1,6 +1,8 @@
 # passly
 A password manager sdk.
-Do note that this project is for educational and research purposes and is not production-ready.
+
+**WARNING: This project is for educational and research purposes, the author is not a cryptographer, and the code has not been reviewed. Use
+at your own risk.**
 
 ## Reference Documentation
 * [How does a password manager work](https://blog.bytebytego.com/p/ep75-how-does-a-password-manager)
@@ -12,3 +14,4 @@ Do note that this project is for educational and research purposes and is not pr
 * [Main techniques for preventing timing attacks](https://stackoverflow.com/questions/47743761/main-techniques-for-preventing-timing-attacks)
 * [Is there any benefit to verifying PKCS#7 padding when using AES CBC and HMAC](https://crypto.stackexchange.com/questions/33444/is-there-any-benefit-to-verifying-pkcs7-padding-when-using-aes-cbc-and-hmac)
 * [OPAQUE: The Best Passwords Never Leave your Device](https://blog.cloudflare.com/opaque-oblivious-passwords/)
+* [OPAQUE: An Asymmetric PAKE Protocol Secure Against Pre-Computation Attacks](https://eprint.iacr.org/2018/163.pdf)

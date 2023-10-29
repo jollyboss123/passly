@@ -1,4 +1,4 @@
-package passly
+package _2skd
 
 import (
 	"reflect"
